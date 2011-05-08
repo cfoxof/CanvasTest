@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Startx:</b>
+  <%= @piece.startX %>
+</p>
+
+<p>
+  <b>Starty:</b>
+  <%= @piece.startY %>
+</p>
+
+<p>
+  <b>Endx:</b>
+  <%= @piece.endX %>
+</p>
+
+<p>
+  <b>Endy:</b>
+  <%= @piece.endY %>
+</p>
+
+
+<%= link_to 'Edit', edit_piece_path(@piece) %> |
+<%= link_to 'Back', pieces_path %>

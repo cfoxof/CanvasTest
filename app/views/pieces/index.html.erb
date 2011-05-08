@@ -1,0 +1,146 @@
+<h1>Listing pieces</h1>
+
+<script type="text/javascript"> 
+<!--
+onload = function()
+{
+	canvas = document.getElementById('canvas');
+	ctx = canvas.getContext('2d');
+	
+	resetCanvas();
+	
+	document.getElementById("canvas").addEventListener("mousedown", canvas_mousedown_listener, false) ;
+	document.getElementById("canvas").addEventListener("mouseup", canvas_mouseup_listener, false) ;
+	document.getElementById("canvas").addEventListener("mousemove", canvas_mousemove_listener, false) ;
+	
+	
+};
+
+var canvas_mousedown_listener =
+{
+	handleEvent : function(event)
+	{
+		if ( event.button == 0 )
+		{
+			rect = event.target.getBoundingClientRect();
+			
+			dragDivX = 0;
+			dragDivY = 0;
+			mouseDownFlag = true;
+			mouseX1 = event.clientX - rect.left;
+			mouseY1 = event.clientY - rect.top;
+			mpoint =" x,y=("+mouseX1+","+mouseY1+")";
+			document.getElementById("clicked").innerText="down"+mpoint;
+		}
+	}
+};
+
+var canvas_mouseup_listener =
+{
+	handleEvent : function(event)
+	{
+		if ( event.button == 0 )
+		{
+		
+			if (mouseDownFlag) {
+				mpoint =" x,y=("+event.clientX+","+event.clientY+")";
+				document.getElementById("clicked").innerText="up"+mpoint;
+				drawline(mouseX1,mouseY1,mouseX2,mouseY2);
+				dragEnd();
+			}
+		}
+	}
+};
+
+var canvas_mousemove_listener =
+{
+	handleEvent : function(event)
+	{
+		if ( event.button == 0 )
+		{
+			if (mouseDownFlag) {
+				rect = event.target.getBoundingClientRect();
+				mouseX2  = event.clientX - rect.left;
+				mouseY2  = event.clientY - rect.top;
+				if (mouseX2 < 0 || mouseX2 > 400 || mouseY2 < 0 || mouseY2 > 400)
+				{
+					dragEnd();
+				}else
+				{
+					dragDivX = (mouseX2 - mouseX1);
+					dragDivY = (mouseY2 - mouseY1);
+					mpoint =" x,y=("+dragDivX+","+dragDivY+")";
+					document.getElementById("clicked").innerText="move"+mpoint;
+				}
+			}
+		}
+	}
+};
+
+function dragEnd() {
+	mouseDownFlag = false;
+
+}
+
+function drawline(startX,startY,endX,endY)
+{
+	canvas = document.getElementById('canvas');
+	ctx = canvas.getContext('2d');
+	
+	ctx.beginPath();
+	ctx.moveTo(startX,startY);
+	ctx.lineTo(endX,endY);
+	ctx.closePath();
+	ctx.stroke();
+	
+};
+
+function resetCanvas()
+{
+	ctx.clearRect(0,0,400,400);
+	ctx.beginPath();
+	ctx.moveTo(1, 1);
+	ctx.lineTo(1, 399);
+	ctx.lineTo(399, 399);
+	ctx.lineTo(399, 1);
+	ctx.lineTo(1, 1);
+	ctx.closePath();
+	ctx.stroke();
+};
+// -->
+</script>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @pieces.each do |piece| %>
+	<tr>
+		<form action="#" name="frm">
+			start (x,y)= <input type="text" name="sx" size=1 value="<%= piece.startX %>"></input>
+			, <input type="text" name="sy" size=1 value="<%= piece.startY %>"></input>
+			 end(x,y)= <input type="text" name="ex" size=1 value="<%= piece.endX %>"></input>
+			<input type="text" name="ey" size=1 value="<%= piece.endY %>"></input>
+			<input type="button" value="draw" onClick="drawline(<%=piece.startX %>,<%= piece.startY %>,<%= piece.endX %>,<%= piece.endY %>)"></input>			<input type="button" value="reset" onClick="resetCanvas()"></input>
+			<a> <%= link_to 'Show', piece %> </a>
+			<a> <%= link_to 'Edit', edit_piece_path(piece) %> </a>
+			<a> <%= link_to 'Destroy', piece, :confirm => 'Are you sure?', :method => :delete %> </a>
+		</form>
+	</tr></br>
+
+<% end %>
+</table>
+	
+	
+  <canvas id="canvas" width="400" height="400" ></canvas>
+<br />
+
+<div id="clicked">testMsg</div>
+<%= link_to 'New Piece', new_piece_path %>

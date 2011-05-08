@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  startX: MyString
+  startY: MyString
+  endX: MyString
+  endY: MyString
+
+two:
+  startX: MyString
+  startY: MyString
+  endX: MyString
+  endY: MyString
